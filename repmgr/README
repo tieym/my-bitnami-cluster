@@ -1,0 +1,27 @@
+to build the repmgr image
+
+cd into the directory containing the dockerfile then:
+podman build -t {image-name} .
+
+
+now there is an image with added configuration, for example: the usual environment variables don't allow you to increase the wal file size and certain back up functionality.
+to work around that the Dockerfile will paste the custom configuration files
+over the original ones so that the container will use the desired configuration files
+
+if you wish to change even more configuration you can edit the shell scripts in this this directory. just make sure to tell the Dockerfile to paste your edited 
+over the original one.
+
+in order to connect all the nodes you'll need to have the IP adresses of the machines the nodes will be running on.
+
+to build the container:
+ podman run --detach --name {pg-SomeNumber} -p 5432:5432 \
+    --env REPMGR_PARTNER_NODES={ip-node1},{ip-node2},{ip-node3}\
+    --env REPMGR_NODE_NAME={the --name given to this node}\
+    --env REPMGR_NODE_NETWORK_NAME={ip host network} \
+    --env REPMGR_PRIMARY_HOST={ip primary node} \
+    --env REPMGR_PASSWORD=root \
+    --env POSTGRESQL_POSTGRES_PASSWORD=root \
+    --env POSTGRESQL_USERNAME=admin \
+    --env POSTGRESQL_PASSWORD=root \
+    --env POSTGRESQL_DATABASE=customdatabase
+    {image-name}

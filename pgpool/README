@@ -1,0 +1,39 @@
+to build this pgpool container:
+
+
+cd into the directory containing the dockerfile then:
+podman build -t {image-name} .
+
+now there is an image with added configuration, for example: the usual environment variables don't allow you to increase the wal file size and certain back up functionality's.
+to work around that the Dockerfile will paste the custom configuration files
+over the original ones so that the container will use the desired configuration files
+
+if you wish to change even more configuration:
+
+fetch the configuration file you want to edit from the bitnami git repo
+https://github.com/bitnami/containers/tree/main/bitnami/postgresql-repmgr
+
+make the change put in the dame conf directory with the healthcheck  
+
+
+
+to run this image :
+
+podman run --detach --rm --name pgpool  \
+ --env PGPOOL_BACKEND_NODES=0:{ip-node1}:5432,1:{ip-node2}:5432,2:{ip-node3}:5432\
+ --env PGPOOL_SR_CHECK_USER=admin   \
+ --env PGPOOL_SR_CHECK_PASSWORD=root   \
+ --env PGPOOL_ENABLE_LDAP=no   \
+ --env PGPOOL_POSTGRES_USERNAME=admin   \
+ --env PGPOOL_POSTGRES_PASSWORD=root   \
+ --env PGPOOL_ADMIN_USERNAME=admin   \
+ --env PGPOOL_ADMIN_PASSWORD=root   \
+ {image-name}
+
+if the cluster is running on 1 machine you can fetch the ip by running podman inspect and then look for the ip with ifconfig. 
+if the cluster is running in the same podman network you can use the name given to the container and let the internal podman network DNS server resolve the name.
+
+ a list of environment variables can be found here:
+ https://github.com/bitnami/bitnami-docker-postgresql-repmgr#environment-variables
+
+ if the desired variable is not found in this list you'll have to paste over the config way as described above.
