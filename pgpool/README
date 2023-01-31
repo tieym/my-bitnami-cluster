@@ -13,7 +13,7 @@ if you wish to change even more configuration:
 fetch the configuration file you want to edit from the bitnami git repo
 https://github.com/bitnami/containers/tree/main/bitnami/postgresql-repmgr
 
-make the change put in the dame conf directory with the healthcheck  
+make the change and put the edited configuration file in the same conf directory with the healthcheck and build the image.
 
 
 
